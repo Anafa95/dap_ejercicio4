@@ -14,9 +14,6 @@ jobs:
       - name: clonar repositorio
         uses: actions/checkout@v4 #es una acción oficial de GitHub Actions que permite a los flujos de trabajo (workflows) clonar un repositorio en el entorno de ejecución (runner)
 
-      # - name: Set up Docker Buildx  # Configura Buildx en el runner antes de construir la imagen
-      #   uses: docker/setup-buildx-action@v2
-
       - name: Login en Docker Hub
         uses: docker/login-action@v3 #es una acción oficial de Docker para GitHub Actions que permite autenticar (login) en un registro de contenedores, como Docker Hub
         with:
@@ -24,7 +21,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
       - name: Construir y push de la imagen
-        uses: docker/build-push-action@v5 #es una acción oficial de Docker para GitHub Actions que se utiliza para construir y subir imágenes Docker a un registro de contenedores
+        uses: docker/build-push-action@v6 #es una acción oficial de Docker para GitHub Actions que se utiliza para construir y subir imágenes Docker a un registro de contenedores
         with:
           context: .
           push: true
