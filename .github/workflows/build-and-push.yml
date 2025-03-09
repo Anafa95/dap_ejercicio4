@@ -1,0 +1,34 @@
+name: Build & Push
+
+on:
+  workflow_dispatch: #permite que se ejecute de forma manual
+  push: 
+    branches: 
+      -test #Se ejecuta cuando hay un push en la rama test
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted #Usa un runner propio del ordenador
+
+    steps:
+      - name: clonar repositorio
+        uses: actions/checkout@v4 #es una acción oficial de GitHub Actions que permite a los flujos de trabajo (workflows) clonar un repositorio en el entorno de ejecución (runner)
+
+      - name: Login en Docker Hub
+        uses: docker/login-action@v3 #es una acción oficial de Docker para GitHub Actions que permite autenticar (login) en un registro de contenedores, como Docker Hub
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+
+      - name: Construir y push de la imagen
+        uses: docker/build-push-action@v5 #es una acción oficial de Docker para GitHub Actions que se utiliza para construir y subir imágenes Docker a un registro de contenedores
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/daw-web:latest
+
+      - name: Ejecutar el contenedor
+        run: |
+          docker stop daw-web || true  # Detiene el contenedor si ya estaba corriendo
+          docker rm daw-web || true    # Elimina el contenedor si existía
+          docker run -d --name daw-web -p 8888:80 ${{ secrets.DOCKER_HUB_USERNAME }}/daw-web:latest
