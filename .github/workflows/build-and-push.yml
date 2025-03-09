@@ -34,4 +34,4 @@ jobs:
         run: |
           docker stop daw-web || true  # Detiene el contenedor si ya estaba corriendo
           docker rm daw-web || true    # Elimina el contenedor si existía
-          docker run -d --name daw-web -p 8888:80 ${{ secrets.DOCKER_HUB_USERNAME }}/daw-web:latest
+          docker run -d --name daw-web -p 8888:80 anafernandezdaw/ana.fernandez.alonso-daw-web:latest
